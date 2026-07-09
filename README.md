@@ -1,12 +1,56 @@
-🚇 Air-Subway: 실시간 대기 질 기반 지하철 혼잡도 예측
-"보이지 않는 공기를 디자인하고, 데이터로 일상의 흐름을 예측하다"
+# Air-Subway
 
-Core Pipeline:
+> Real-time subway survival dashboard based on congestion data, arrival information, and air quality.
 
-Data Ingestion: 공공데이터 API 및 SQL을 활용한 역사 내 환경 데이터(CO2, 미세먼지) 수집.
+Air-Subway is a Streamlit app that helps users check whether a subway ride is likely to feel comfortable, crowded, or worth delaying. It combines Seoul subway congestion statistics, real-time arrival data, and district-level air quality data into a quick "boarding recommendation" UI.
 
-Analysis: Pandas/NumPy 기반의 시계열 상관관계 분석을 통한 데이터 정제.
+## Current Implementation
 
-Prediction: 과거 학습 데이터를 활용한 단기(10~30분) 혼잡도 예측 모델 구현.
+Implemented in this repository:
 
-Key Feature: Glanceable UI를 통한 즉각적 정보 전달 (Green/Yellow/Red 시각화).
+- Streamlit dashboard UI
+- Seoul subway congestion lookup from `data/congestion_data.csv`
+- Current time-slot matching in 30-minute intervals
+- Real-time subway arrival lookup through the Seoul open API
+- District-level fine dust lookup through the Seoul open API
+- Station-to-district mapping for air quality queries
+- Simple discomfort-index calculation
+- Green/yellow/red style ride recommendation
+- Time-of-day congestion chart and best upcoming time suggestion
+
+This repository does not currently include a machine-learning prediction model, SQL pipeline, or CO2 sensor data ingestion. The congestion result is calculated from historical CSV statistics matched to the current day/time.
+
+## Project Structure
+
+```text
+Air-Subway/
+├── app.py                  # Streamlit UI
+├── logic.py                # Data loading, API calls, and scoring logic
+├── data/
+│   └── congestion_data.csv # Subway congestion statistics
+├── backup/
+│   └── app_backup.py       # Earlier integrated prototype
+└── requirements.txt
+```
+
+## Data And APIs
+
+- `data/congestion_data.csv`: historical subway congestion statistics
+- Seoul subway real-time arrival API
+- Seoul real-time city air API
+
+API keys are read from Streamlit secrets:
+
+```toml
+[seoul]
+subway_key = "..."
+general_key = "..."
+```
+
+## Getting Started
+
+```bash
+pip install -r requirements.txt
+streamlit run app.py
+```
+
